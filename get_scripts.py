@@ -56,21 +56,19 @@ def get_script(url):
     return title_script
 
 
-def main():
+def get_all_scripts(episode_url):
     breaking_bad_scripts = {}
-    episodes = [7, 13, 13, 13, 16]
-    breaking_bad = 'http://www.springfieldspringfield.co.uk/view_episode_scripts.php?tv-show=breaking-bad&episode='
-    scripts = generate_urls(episodes, breaking_bad)
-    for episode, url in scripts.items():
+    for episode, url in episode_url.items():
         scraped_scripe = get_script(url)
         breaking_bad_scripts[episode] = scraped_scripe
+    return breaking_bad_scripts
 
-    print(len(breaking_bad_scripts))
-    # for k, v in breaking_bad_scripts.items():
-    #     print(k)
-    #     print(v[0])
-    #     print(v[1])
-    #     break
+
+def main():
+    episodes = [7, 13, 13, 13, 16]
+    scrape_url = 'http://www.springfieldspringfield.co.uk/view_episode_scripts.php?tv-show=breaking-bad&episode='
+    scripts = generate_urls(episodes, scrape_url)
+    all_scripts = get_all_scripts(scripts)
 
 
 if __name__ == '__main__':
