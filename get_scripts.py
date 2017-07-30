@@ -9,24 +9,20 @@ Season 03(13)
 Season 04(13)
 Season 05(16)
 """
-
-
-CURRENT_DIR = os.getcwd()
+EPISODES = [7, 13, 13, 13, 16]
 
 
 def write_file(*args):
     file_name, title, data = args
     file_name = "breaking_bad_{}.txt".format(file_name)
-    if os.path.isdir(CURRENT_DIR + '/tmp'):
-        if len(os.listdir(CURRENT_DIR + '/tmp')) > 0:
-            print('tmp is not empty')
-            return 0
+    if os.path.exists('scripts'):
+        print('check if empty')
     else:
-        os.mkdir('tmp')
-        tmp = CURRENT_DIR + '/tmp'
-        with open(os.path.join(tmp, file_name), 'w+') as f_handler:
-            f_handler.write(title)
-            f_handler.write(data)
+        os.mkdir('scripts')
+
+    with open('scripts/' + file_name, 'w+') as f_handler:
+        f_handler.write(title)
+        f_handler.write(data)
 
 
 def generate_urls(episodes, url):
@@ -47,7 +43,6 @@ def get_script(url):
     if len(title) == 1:
         title = title[0].text
     else:
-        # warn user ?
         title = 'Title Not Located'
     # Check for zero length string
     script = soup.find_all('div', class_='scrolling-script-container')
@@ -59,16 +54,39 @@ def get_script(url):
 def get_all_scripts(episode_url):
     breaking_bad_scripts = {}
     for episode, url in episode_url.items():
-        scraped_scripe = get_script(url)
-        breaking_bad_scripts[episode] = scraped_scripe
+        scraped_script = get_script(url)
+        breaking_bad_scripts[episode] = scraped_script
     return breaking_bad_scripts
 
 
+def user_input(scripts):
+    print("Breaking Bad - S01:1-6, S02:1-13, S03:1-13, S04:1-13, S05:1-16")
+    flag = True
+    while flag:
+        season = input("What Season: ")
+        if not season:
+            print("Invalid input, please try again.")
+            continue
+        episode = input("What Episode: ")
+        if not episode:
+            print("Invalid input, please try again.")
+            continue
+
+        s_e_num = "s0{}e{}".format(season, episode.zfill(2))
+
+        if s_e_num in scripts:
+            flag = False
+        else:
+            response = input("Script not found, try again or enter 'q' to quit: ")
+            if response == "q":
+                flag = False
+
+
 def main():
-    episodes = [7, 13, 13, 13, 16]
     scrape_url = 'http://www.springfieldspringfield.co.uk/view_episode_scripts.php?tv-show=breaking-bad&episode='
-    scripts = generate_urls(episodes, scrape_url)
-    all_scripts = get_all_scripts(scripts)
+    scripts = generate_urls(EPISODES, scrape_url)
+    # all_scripts = get_all_scripts(scripts)
+    user_input(scripts)
 
 
 if __name__ == '__main__':
