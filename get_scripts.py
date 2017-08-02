@@ -75,6 +75,7 @@ def user_input(scripts):
         s_e_num = "s0{}e{}".format(season, episode.zfill(2))
 
         if s_e_num in scripts:
+            print("Success: script found.")
             flag = False
         else:
             response = input("Script not found, try again or enter 'q' to quit: ")
